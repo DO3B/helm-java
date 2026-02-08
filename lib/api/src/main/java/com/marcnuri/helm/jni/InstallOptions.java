@@ -44,6 +44,7 @@ import com.sun.jna.Structure;
   "skipCRDs",
   "wait",
   "timeout",
+  "labels",
   "values",
   "setFiles",
   "valuesFiles",
@@ -79,6 +80,7 @@ public class InstallOptions extends Structure {
   public int skipCRDs;
   public int wait;
   public int timeout;
+  public String labels;
   public String values;
   public String setFiles;
   public String valuesFiles;
@@ -113,6 +115,7 @@ public class InstallOptions extends Structure {
     int skipCRDs,
     int wait,
     int timeout,
+    String labels,
     String values,
     String setFiles,
     String valuesFiles,
@@ -146,6 +149,7 @@ public class InstallOptions extends Structure {
     this.skipCRDs = skipCRDs;
     this.wait = wait;
     this.timeout = timeout;
+    this.labels = labels;
     this.values = values;
     this.setFiles = setFiles;
     this.valuesFiles = valuesFiles;

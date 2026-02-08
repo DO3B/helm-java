@@ -273,6 +273,19 @@ class HelmInstallTest {
         .returns("test-skip-crds", Release::getName)
         .returns("deployed", Release::getStatus);
     }
+
+    @Test
+    void withLabels() {
+      final Release result = helm.install()
+        .clientOnly()
+        .withName("test-labels")
+        .withLabel("env", "production")
+        .withLabel("team", "backend")
+        .call();
+      assertThat(result)
+        .returns("test-labels", Release::getName)
+        .returns("deployed", Release::getStatus);
+    }
   }
 
   @Nested
