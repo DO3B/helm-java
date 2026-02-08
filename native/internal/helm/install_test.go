@@ -182,3 +182,24 @@ func TestInstallDependencyUpdate(t *testing.T) {
 		t.Error("Expected install to create lock file")
 	}
 }
+
+func TestInstallLabels(t *testing.T) {
+	create, _ := Create(&CreateOptions{
+		Name: "test",
+		Dir:  t.TempDir(),
+	})
+	out, err := Install(&InstallOptions{
+		Chart:      create,
+		Name:       "test",
+		Labels:     "env=production&team=backend",
+		ClientOnly: true,
+	})
+	if err != nil {
+		t.Errorf("Expected install to succeed, got %s", err)
+		return
+	}
+	if !strings.Contains(out, "NAME: test") {
+		t.Errorf("Expected install to succeed, got %s", out)
+		return
+	}
+}

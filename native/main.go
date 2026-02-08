@@ -59,6 +59,7 @@ struct InstallOptions {
 	int   skipCRDs;
 	int   wait;
 	int   timeout;
+	char* labels;
 	char* values;
 	char* setFiles;
 	char* valuesFiles;
@@ -375,6 +376,7 @@ func Install(options *C.struct_InstallOptions) C.Result {
 			SkipCRDs:                 options.skipCRDs == 1,
 			Wait:                     options.wait == 1,
 			Timeout:                  timeout,
+			Labels:                   C.GoString(options.labels),
 			Values:                   C.GoString(options.values),
 			SetFiles:                 C.GoString(options.setFiles),
 			ValuesFiles:              C.GoString(options.valuesFiles),

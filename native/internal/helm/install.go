@@ -58,6 +58,7 @@ type InstallOptions struct {
 	SkipCRDs                 bool
 	Wait                     bool
 	Timeout                  time.Duration
+	Labels                   string
 	Values                   string
 	SetFiles                 string
 	ValuesFiles              string
@@ -150,6 +151,14 @@ func install(options *InstallOptions) (*release.Release, *installOutputs, error)
 	client.DisableOpenAPIValidation = options.DisableOpenApiValidation
 	client.InsecureSkipTLSverify = options.InsecureSkipTLSverify
 	client.PlainHTTP = options.PlainHttp
+	// Parse and set labels
+	if options.Labels != "" {
+		labels, err := parseLabels(options.Labels)
+		if err != nil {
+			return nil, outputs, err
+		}
+		client.Labels = labels
+	}
 	chartRequested, chartPath, err := loadChart(client.ChartPathOptions, options.RepositoryConfig, chartReference)
 	if err != nil {
 		return nil, outputs, err
@@ -325,4 +334,19 @@ func mergeValues(encodedValuesMap, encodedSetFiles, encodedValuesFiles string) (
 		FileValues: setFiles,
 		ValueFiles: valueFiles,
 	}).MergeValues(make(getter.Providers, 0))
+}
+
+// parseLabels parses URL-encoded labels string and returns a map[string]string
+func parseLabels(labels string) (map[string]string, error) {
+	result := make(map[string]string)
+	if labels != "" {
+		params, err := url.ParseQuery(labels)
+		if err != nil {
+			return nil, err
+		}
+		for key, value := range params {
+			result[key] = value[0]
+		}
+	}
+	return result, nil
 }

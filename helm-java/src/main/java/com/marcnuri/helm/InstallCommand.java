@@ -55,6 +55,7 @@ public class InstallCommand extends HelmCommand<Release> {
   private boolean skipCrds;
   private boolean wait;
   private int timeout;
+  private final Map<String, String> labels;
   private final Map<String, String> values;
   private final Map<String, Path> fileValues;
   private final List<Path> valuesFiles;
@@ -77,6 +78,7 @@ public class InstallCommand extends HelmCommand<Release> {
   public InstallCommand(HelmLib helmLib, Path chart) {
     super(helmLib);
     this.chart = toString(chart);
+    this.labels = new LinkedHashMap<>();
     this.values = new LinkedHashMap<>();
     this.fileValues = new LinkedHashMap<>();
     this.valuesFiles = new ArrayList<>();
@@ -103,6 +105,7 @@ public class InstallCommand extends HelmCommand<Release> {
       toInt(skipCrds),
       toInt(wait),
       timeout,
+      urlEncode(labels),
       urlEncode(values),
       urlEncode(toStringValues(fileValues)),
       toString(valuesFiles),
@@ -323,6 +326,20 @@ public class InstallCommand extends HelmCommand<Release> {
    */
   public InstallCommand withTimeout(int timeout) {
     this.timeout = timeout;
+    return this;
+  }
+
+  /**
+   * Add a label to the release metadata.
+   * <p>
+   * Labels are key-value pairs that are added to the release metadata and can be used for organizing and selecting releases.
+   *
+   * @param key   the label key.
+   * @param value the label value.
+   * @return this {@link InstallCommand} instance.
+   */
+  public InstallCommand withLabel(String key, String value) {
+    this.labels.put(key, value == null ? "" : value);
     return this;
   }
 
